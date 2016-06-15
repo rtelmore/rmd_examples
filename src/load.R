@@ -17,3 +17,5 @@ saveRDS(df_jan, file = "data/jan_data.rds")
 set.seed(10830)
 df_sample <- sample_frac(df, size = .1)
 saveRDS(df_sample, file = "data/311_service_data_2015_sample.rds")
+
+df_sample <- readRDS(file = "data/311_service_data_2015_sample.rds")
