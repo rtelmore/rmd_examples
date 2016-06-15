@@ -1,0 +1,49 @@
+---
+title: "An Introduction to R Markdown"
+author: "Ryan Elmore"
+date: "June 15, 2016"
+output: 
+  ioslides_presentation:
+    logo: bia-logo.jpg
+    css: ryan-du.css
+    widescreen: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## What is R Markdown?
+
+From the R Markdown Cheatsheet: "An R Markdown (.Rmd) file is a record of your research."
+
+* <b> HTML </b>
+    + Confusing to read
+* <b> [Markdown](https://daringfireball.net/projects/markdown/)</b>
+    + Plain text to HTML 
+    + Syntax + Software
+* <b> [RMarkdown](http://rmarkdown.rstudio.com">RMarkdown)</b>
+    + R + Markdown (+ Pandoc)
+    + Output: pdf, html, and docx (others)!
+
+## The Basics
+
+* YAML
+    + A header for document options
+    + Title, name, etc.
+* Markdown
+* R Code Chunks
+* Knit the document
+
+## Getting Started {.flexbox .vcenter}
+
+![Creating an .rmd File](../fig/new-rmd.png)
+
+## Rmd Options {.flexbox .vcenter}
+
+![](../fig/popup.png)
+
+## Other Stuff
+
+* Bibliography
+* Templates

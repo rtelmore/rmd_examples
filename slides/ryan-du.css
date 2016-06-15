@@ -1,0 +1,57 @@
+/*********************************************
+ * NAVIGATION CONTROLS
+ * DU Colors
+ *********************************************/
+
+/* DU Stuff */
+ 
+.gdbar img {
+  width: 300px !important;
+  height: 98px !important;
+  margin: 8px 8px;
+}
+
+.gdbar {
+  width: 330px !important;
+  height: 115px !important;
+  color: #ffffff !important;
+}
+
+body > slides > slide > hgroup > h1{
+  color: #850000 !important;
+}
+
+body > slides > slide > hgroup > h2{
+  color: #850000 !important;
+}
+
+p{
+  color: #000000 !important;
+}
+
+a{
+  color: #850000 !important;  
+}
+
+body > slides > slide > hgroup > p{
+  color: #000000 !important;
+}
+
+body > slides > slide > aside {
+  color: #FFFFFF !important;
+}
+
+slides > slide:not(.nobackground):before {
+  width: 100px;
+  height: 33px;
+  background-size: 100px 33px;
+}
+
+ul > li {
+  color: #000000 !important;
+}
+
+slides > slide.backdrop {
+  background: white;
+}
+
