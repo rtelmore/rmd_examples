@@ -26,7 +26,7 @@ From the R Markdown Cheatsheet: "An R Markdown (.Rmd) file is a record of your r
     + R + Markdown (+ Pandoc)
     + Output: pdf, html, and docx (others)!
 
-## The Basics
+## The basics of an .Rmd file
 
 * YAML
     + A header for document options
@@ -35,9 +35,39 @@ From the R Markdown Cheatsheet: "An R Markdown (.Rmd) file is a record of your r
 * R Code Chunks
 * Knit the document
 
-## Getting Started {.flexbox .vcenter}
+## YAML {.flexbox .vcenter}
 
-![Creating an .rmd File](../fig/new-rmd.png)
+```{r yaml, eval = F, echo = T}
+---
+title: "An Introduction to R Markdown"
+author: "Ryan Elmore"
+date: "June 15, 2016"
+output: html_document
+---
+```
+
+## Markdown
+
+## Math
+
+## R Code 
+
+You can display (and evaluate) R code inline, e.g. the mean of 100 random normal variables is `round(mean(rnorm(100)), digits = 3)` = `r round(mean(rnorm(100)), digits = 3)`, or as a chunk given below
+
+```{r ggplot, eval = F, echo = T}
+p <- ggplot(data = filter(df, Name == "Curry, Stephen"),
+            aes(x = Date, y = Value))
+p + geom_line()
+```
+
+## Getting Started 
+
+1. Install the rmarkdown package.
+2. Create a new rmarkdown file 
+
+<center>
+![](../fig/new-rmd.png)
+</center>
 
 ## Rmd Options {.flexbox .vcenter}
 
