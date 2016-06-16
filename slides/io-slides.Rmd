@@ -6,6 +6,7 @@ output:
   ioslides_presentation:
     logo: bia-logo.jpg
     css: ryan-du.css
+    wide: true
 ---
 
 ```{r setup, include=FALSE}
@@ -45,16 +46,6 @@ output: html_document
 ---
 ```
 
-## Markdown
-
-<div class="columns-2">
-  Test
-
-  - Bullet 1
-  - Bullet 2
-  - Bullet 3
-</div>
-
 ## R Code 
 
 You can display (and evaluate) R code inline, e.g. the mean of 100 random normal variables is `round(mean(rnorm(100)), digits = 3)` = `r round(mean(rnorm(100)), digits = 3)`, or as a chunk given below
@@ -74,7 +65,6 @@ p <- ggplot(data = filter(df, Name == "Curry, Stephen"),
             aes(x = Date, y = Value))
 p + geom_line()
 ```
-
 
 ## Basic Chunk Options
 
@@ -103,13 +93,6 @@ knitr::opts_chunk$set()
 ![](../fig/popup.png)
 
 ## Other Stuff
-
-```markdown
-A friend once said:
-
-> It's always better to give
-> than to receive.
-```
 
 * Bibliography
 * Templates (Tufte)
