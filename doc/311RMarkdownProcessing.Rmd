@@ -1,0 +1,97 @@
+---
+title: "2015 311 Data"
+author: "Ryan Elmore & Kellie Keeling"
+date: "June 20, 2016"
+output: html_document
+---
+##Processing of the 2015 Denver 311 Dataset
+
+###Reading in the Data and Changing Variable Names
+To begin the exploration, a 10% sample of the data was collected resulting in a 1.3MB RDS file with 47,170 rows of data.
+```{r warning=FALSE}
+#This file is located on github
+dfsamp <- readRDS(gzcon(url("https://github.com/rtelmore/rmd_examples/raw/master/data/311_service_data_2015_sample.rds")))
+```
+
+There are 24 variables in the data set which we can see by using the <b>str</b> (structure) command.
+
+```{r warning=FALSE}
+str(dfsamp)
+```
+Since many of the variables have spaces in the names, we will convert them to use . instead of spaces with <b>make.names</b>.
+
+```{r warning=FALSE}
+names(dfsamp) <- make.names(names(dfsamp)) #replaces spaces with .
+names(dfsamp)
+```
+
+###Creating and Modifying the Time Variables
+Next we will process the Case.Created and Case.Created Date fields.  There are two fields for each - one has just the day in Year/Month/Day format and one also includes the time. We can see the values for the first row below.
+```{r warning=FALSE}
+dfsamp$Case.Created.Date[1]
+dfsamp$Case.Closed.Date[1]
+dfsamp$Case.Created.dttm[1]
+dfsamp$Case.Closed.dttm[1]
+```
+
+First, we will pull out just the month from Case.Created.Date using the <b>substr</b> substring function. Again we have output the values for the first row to check that it is working.
+```{r warning=FALSE}
+dfsamp$Month<-as.numeric(substr(dfsamp$Case.Created.Date, 6,7))
+dfsamp$Month[1]
+```
+
+Since we have the dates also in the Date/Time format, we can also convert the variable to have a r recognized date/time format "POSIXlt" which is a named list of vectors.  Since it is it named, we can also use the names to pull out parts of the Date/Time. In our data, we will use $hour to pull out the named hour portion of the Date/Time. We display the Hour for the first row.
+```{r}
+#First convert to the POSIXlt format
+dfsamp$Case.Created <- strptime(dfsamp$Case.Created.dttm,format="%m/%d/%Y %I:%M:%S %p")
+dfsamp$Case.Closed <- strptime(dfsamp$Case.Closed.dttm,format="%m/%d/%Y %I:%M:%S %p")
+#Now pull out just the Hour
+dfsamp$Hour <- dfsamp$Case.Created$hour
+dfsamp$Hour[1]
+```
+
+Our final time calculation will be to calculate the number of days betwen the Case Creation and Case Closed time. We will use the <b>difftime</b> function putting the latest time first, We will also use the option to convert the units to Days. We will display Created and Closed Time as well as the hour for the first row to double check that it is working.
+```{r}
+dfsamp$DaysToClose <- difftime(dfsamp$Case.Closed, dfsamp$Case.Created, units = "days")
+dfsamp$Case.Created[1]
+dfsamp$Case.Closed[1]
+dfsamp$DaysToClose[1]
+```
+
+###Subsetting the data into our final version with 15 variables
+To create the final version of our data, we will remove some columns that are not fully populated or are not useful to our explorations (Case.Created.Date, Case.Created.dttm , Case.Closed.Date , Case.Closed.dttm, Customer.Zip.Code, Incident.Address.1, Incident.Address.2, Incident.Intersection.1, Incident.Intersection.2, Incident.Zip.Code, Longitude, Latitude, Division, Major.Area, Topic, Neighborhood). Therefore we will keep the 5 new variables we created along with 8 original variables: Case.Summary, Case.Status, Case.Source, First.Call.Resolution, Agency, Type, Council.District and Police.District.
+
+```{r}
+df <- dfsamp[,c('Case.Summary','Case.Status','Case.Source','First.Call.Resolution', 
+            'Agency','Type','Council.District','Police.District','Month','Case.Closed',
+            'Case.Created','Hour','DaysToClose')]
+```
+
+
+###Creating the Police District Dataset
+Another analysis we want to explore is the Number of Incidents in each Police District so we need to create a new dataset that contains this information.  We also want to plot the district information on a map, so we will add the Latitude/Longitude information to this dataset.
+
+
+First, we will use the <b>table</b> function to count the number of incidents in each Police District. We will store this in a new dataset and will label the columns "District" and "NumIncidents". We can see that the DIA District 7 only had 2 incidents.
+```{r}
+PDInc <- data.frame(table(df$Police.District))
+names(PDInc) = c("District","NumIncidents")
+PDInc
+```
+
+Finally, we will add the Latitude and Longitude data to the dataset.  
+
+* Dist 1 1311 West 46th Ave, Denver, Colorado 80211 39.781078, -105.002776  
+* Dist 2 3921 N Holly St Denver, CO 80207 39.771207, -104.922977  
+* Dist 3 1625 South University Blvd Denver, Colorado  80210 39.686980, -104.960041  
+* Dist 4 2100 South Clay Street Denver, CO 80219 39.678371, -105.019803    
+* Dist 5 4685 Peoria Street Denver, Colorado  80239 39.781208, -104.848442  
+* Dist 6 1566 N Washington St, Denver, Colorado  80203 39.741227, -104.978642  
+* Dist 7 8500 Pe?a Blvd Denver, CO 80249 39.849596, -104.673364  
+```{r}
+PDLL <- data.frame(District=c(1,2,3,4,5,6,7),
+   Latitude=c(39.781078,39.771207,39.686980,39.678371,39.781208,39.741227,39.849596),
+   Longitude=c(-105.002776,-104.922977,-104.960041,-105.019803,-104.848442,-104.978642,-104.673364),
+   NumIncidents=PDInc$NumIncidents)
+PDLL
+```
