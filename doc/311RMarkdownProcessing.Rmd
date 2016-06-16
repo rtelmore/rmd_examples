@@ -2,18 +2,66 @@
 title: "2015 311 Data"
 author: "Ryan Elmore & Kellie Keeling"
 date: "June 20, 2016"
-output: html_document
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+    theme: default
+    highlight: tango
 ---
-##Processing of the 2015 Denver 311 Dataset
 
-###Reading in the Data and Changing Variable Names
-To begin the exploration, a 10% sample of the data was collected resulting in a 1.3MB RDS file with 47,170 rows of data.
-```{r warning=FALSE}
+```{r packages, include = FALSE}
+library(lubridate)
+library(knitr)
+```
+
+```{r knit-opts, echo = FALSE}
+opts_chunk$set(fig.path = "fig/",
+               fig.width = 6,
+               fig.height = 5,
+               fig.lp = "fig:",
+               fig.keep="high",
+               fig.show="hold",
+               fig.align="center",
+               echo = FALSE,
+               warning = FALSE,
+               message = FALSE,
+               comment = NA)
+```
+
+
+## Processing of the 2015 Denver 311 Dataset
+
+### Reading in the Data and Changing Variable Names
+
+Note that we originally downloaded the csv file (100+ MB) and coverted it to 
+.rds using the following code.
+
+```{r cvs-to-rds, eval = FALSE, echo = TRUE}
+library(readr)
+library(lubridate)
+library(dplyr)
+df <- read_csv("data/311_service_data_2015.csv")
+df$`Case Created Date` <- mdy(df$`Case Created Date`)
+set.seed(10830)
+df_sample <- sample_frac(df, size = .1)
+saveRDS(df_sample, file = "data/311_service_data_2015_sample.rds")
+```
+
+```{r cache = TRUE, echo = FALSE}
 #This file is located on github
 dfsamp <- readRDS(gzcon(url("https://github.com/rtelmore/rmd_examples/raw/master/data/311_service_data_2015_sample.rds")))
 ```
 
-There are 24 variables in the data set which we can see by using the <b>str</b> (structure) command.
+To begin the exploration, a 10% sample of the data was collected resulting in a
+1.3MB RDS file with `r format(dim(dfsamp)[1], big.mark=",")` rows of data.
+
+```{r eval = FALSE}
+# This file is located on github
+dfsamp <- readRDS(gzcon(url("https://github.com/rtelmore/rmd_examples/raw/master/data/311_service_data_2015_sample.rds")))
+```
+
+There are `r format(dim(dfsamp)[2], big.mark=",")` variables in the data set which we can see by using the <b>str</b> (structure) command.
 
 ```{r warning=FALSE}
 str(dfsamp)
