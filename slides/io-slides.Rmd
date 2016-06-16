@@ -6,7 +6,6 @@ output:
   ioslides_presentation:
     logo: bia-logo.jpg
     css: ryan-du.css
-    widescreen: true
 ---
 
 ```{r setup, include=FALSE}
@@ -48,11 +47,27 @@ output: html_document
 
 ## Markdown
 
-## Math
+<div class="columns-2">
+  Test
+
+  - Bullet 1
+  - Bullet 2
+  - Bullet 3
+</div>
 
 ## R Code 
 
 You can display (and evaluate) R code inline, e.g. the mean of 100 random normal variables is `round(mean(rnorm(100)), digits = 3)` = `r round(mean(rnorm(100)), digits = 3)`, or as a chunk given below
+
+<pre>
+  <code>
+  ```{r ggplot-pre, eval = F, echo = T}
+  p <- ggplot(data = filter(df, Name == "Curry, Stephen"),
+              aes(x = Date, y = Value))
+  p + geom_line()
+  ```
+  </code>
+</pre>
 
 ```{r ggplot, eval = F, echo = T}
 p <- ggplot(data = filter(df, Name == "Curry, Stephen"),
@@ -60,10 +75,24 @@ p <- ggplot(data = filter(df, Name == "Curry, Stephen"),
 p + geom_line()
 ```
 
+
+## Basic Chunk Options
+
+- `echo = TRUE`: include R source code in the output 
+- `eval = TRUE`: evaluate the code
+- `message = TRUE`: preserve messages emitted by `message()`
+- `include = FALSE`: nothing in output; code is still evaluated and plot files are generated
+
+Set global chunk options:
+
+```r
+knitr::opts_chunk$set()
+```
+
 ## Getting Started 
 
 1. Install the rmarkdown package.
-2. Create a new rmarkdown file 
+2. Create a new rmarkdown (.Rmd) file 
 
 <center>
 ![](../fig/new-rmd.png)
@@ -75,7 +104,16 @@ p + geom_line()
 
 ## Other Stuff
 
+```markdown
+A friend once said:
+
+> It's always better to give
+> than to receive.
+```
+
 * Bibliography
-* Templates
+* Templates (Tufte)
+* Equations (Latex)
 * Dashboards
 * Automated Reporting
+
