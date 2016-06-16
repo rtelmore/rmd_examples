@@ -1,7 +1,7 @@
 ---
 title: "An Introduction to R Markdown"
-author: "Ryan Elmore"
-date: "June 15, 2016"
+author: "Ryan Elmore & Kellie Kelling"
+date: "June 20, 2016"
 output: 
   ioslides_presentation:
     logo: bia-logo.jpg
