@@ -51,6 +51,10 @@ ul > li {
   color: #000000 !important;
 }
 
+ol > li {
+  color: #000000 !important;
+}
+
 slides > slide.backdrop {
   background: white;
 }

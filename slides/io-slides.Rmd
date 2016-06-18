@@ -1,6 +1,6 @@
 ---
 title: "An Introduction to R Markdown"
-author: "Ryan Elmore & Kellie Kelling"
+author: "Ryan Elmore & Kellie Keeling"
 date: "June 20, 2016"
 output: 
   ioslides_presentation:
@@ -22,7 +22,7 @@ From the R Markdown Cheatsheet: "An R Markdown (.Rmd) file is a record of your r
 * <b> [Markdown](https://daringfireball.net/projects/markdown/)</b>
     + Plain text to HTML 
     + Syntax + Software
-* <b> [RMarkdown](http://rmarkdown.rstudio.com">RMarkdown)</b>
+* <b> [RMarkdown](http://rmarkdown.rstudio.com)</b>
     + R + Markdown (+ Pandoc)
     + Output: pdf, html, and docx (others)!
 
@@ -34,6 +34,15 @@ From the R Markdown Cheatsheet: "An R Markdown (.Rmd) file is a record of your r
 * Markdown
 * R Code Chunks
 * Knit the document
+
+## Another Look
+
+* Preamble
+    + YAML
+    + Set knitr options
+    + Load Packages
+* Load/Generate Data
+* Data Analysis
 
 ## YAML {.flexbox .vcenter}
 
@@ -66,16 +75,17 @@ p <- ggplot(data = filter(df, Name == "Curry, Stephen"),
 p + geom_line()
 ```
 
-## Basic Chunk Options
+## R Code Chunk Options
 
-- `echo = TRUE`: include R source code in the output 
-- `eval = TRUE`: evaluate the code
-- `message = TRUE`: preserve messages emitted by `message()`
-- `include = FALSE`: nothing in output; code is still evaluated and plot files are generated
+* `echo = TRUE`: include R source code in the output 
+* `eval = TRUE`: evaluate the code
+* `warning = FALSE`: do not include warning messages 
+* `message = TRUE`: preserve messages emitted by `message()`
+* `include = FALSE`: nothing in output; code is still evaluated and plot files are generated
 
 Set global chunk options:
 
-```r
+```{r knitr-opts, eval = FALSE, echo = T}
 knitr::opts_chunk$set()
 ```
 
