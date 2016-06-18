@@ -1,0 +1,17 @@
+---
+title: "311 Data Exercises"
+author: "Ryan Elmore & Kellie Keeling"
+date: "June 20, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Exercises
+
+1. Use the 311 data set (subset) to create a flexdashboard with the following
+properties:
+    a. Two rows with two figures on each row.
+    b. Make the second row a tabbed row so that only one figure shows at a time. 
