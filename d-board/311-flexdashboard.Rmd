@@ -1,0 +1,136 @@
+---
+title: "Flexdashboards with RMarkdown"
+author: "Ryan Elmore & Kellie Keeling"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    social: menu
+    source_code: embed
+    vertical_layout: scroll
+---
+
+```{r packages, include=FALSE}
+library(flexdashboard)
+library(knitr)
+library(lubridate)
+library(dplyr)
+library(ggplot2)
+library(shiny)
+library(ggmap)
+```
+
+```{r knit-opts, echo = FALSE}
+opts_chunk$set(warning = FALSE,
+               message = FALSE,
+               comment = NA)
+```
+
+
+```{r load-data, echo = FALSE, cache = TRUE}
+df <- readRDS(gzcon(url("https://github.com/rtelmore/rmd_examples/raw/master/data/311-df.rds")))
+
+PDLL <- readRDS(gzcon(url("https://github.com/rtelmore/rmd_examples/raw/master/data/311-PDLL.rds")))
+
+PDInc <- readRDS(gzcon(url("https://github.com/rtelmore/rmd_examples/raw/master/data/311-PDInc.rds")))
+```
+
+
+Row 
+-----------------------------------------------------------------------
+
+### Map
+
+```{r}
+myLocation <- c(-105, 39.6, -104.6, 39.85)
+myMap <- get_map(location = myLocation,
+                 source = 'stamen',
+                 maptype = 'terrain',
+                 crop = FALSE,
+                 zoom = 11)
+g <- ggmap(myMap)
+g + geom_point(aes(x = Longitude, y = Latitude), 
+               data = PDLL,
+               alpha = .5, 
+               color = "darkred",
+               size = PDLL$NumIncidents/200)
+```
+
+Row {.tabset .tabset-fade .tabset-fade}
+-----------------------------------------------------------------------
+
+### Incidents by District
+
+```{r inc-dist-bar}
+p <- ggplot(data = na.omit(df), 
+            aes(x = as.factor(Police.District),
+                col = as.factor(Police.District)))
+p + geom_bar() +
+  guides(col = FALSE) +
+  scale_x_discrete("district") +
+  scale_y_continuous("no. of incidents") +
+  theme_bw()
+```
+
+### Hourly Incidents
+
+```{r hourly-inc}
+p <- ggplot(data = group_by(na.omit(df), Hour) %>%
+              summarize(n = n()),
+            aes(x = Hour, y = n))
+p + geom_line() +
+  theme_bw()
+```
+
+### Hourly Incidents by District
+
+```{r hourly-inc-district}
+p <- ggplot(data = na.omit(df) %>%
+              filter(Police.District != 7) %>%
+              group_by(Hour, Police.District) %>%
+              summarize(n = n()),
+            aes(x = Hour, y = n, 
+                group = as.factor(Police.District),
+                color = as.factor(Police.District)))
+p + geom_line() +
+  scale_color_discrete("District") +
+  scale_x_continuous("hour") +
+  scale_y_continuous("no. of incidents") +
+  theme_bw()
+```
+
+Row 
+-----------------------------------------------------------------------
+
+### Incidents by District
+
+```{r}
+p <- ggplot(data = na.omit(df), 
+            aes(x = as.factor(Police.District),
+                           col = as.factor(Police.District)))
+p + geom_bar() +
+  guides(col = FALSE) +
+  scale_x_discrete("district") +
+  scale_y_continuous("no. of incidents") +
+  theme_bw()
+```
+
+
+### Hourly Incidents
+
+```{r}
+p <- ggplot(data = group_by(df, Hour) %>%
+              summarize(n = n()),
+            aes(x = Hour, y = n))
+p + geom_line() +
+  theme_bw()
+```
+
+### Monthly Incidents
+
+```{r}
+p <- ggplot(data = group_by(df, Month) %>%
+              summarize(n = n()),
+            aes(x = Month, y = n))
+p + geom_line() +
+  theme_bw()
+```
