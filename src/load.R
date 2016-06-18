@@ -7,7 +7,6 @@ library(dplyr)
 
 df <- read_csv("data/311_service_data_2015.csv")
 
-df$`Case Created Date` <- mdy(df$`Case Created Date`)
 saveRDS(df, file = "data/311_service_data_2015.rds")
 
 df_jan <- df %>% 
