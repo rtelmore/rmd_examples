@@ -27,11 +27,12 @@ opts_chunk$set(warning = FALSE,
 
 
 ```{r load-data, echo = FALSE, cache = TRUE}
-df <- readRDS(gzcon(url("https://github.com/rtelmore/rmd_examples/raw/master/data/311-df.rds")))
-
-PDLL <- readRDS(gzcon(url("https://github.com/rtelmore/rmd_examples/raw/master/data/311-PDLL.rds")))
-
-PDInc <- readRDS(gzcon(url("https://github.com/rtelmore/rmd_examples/raw/master/data/311-PDInc.rds")))
+# df <- readRDS(gzcon(url("https://github.com/rtelmore/rmd_examples/raw/master/data/311-df.rds")))
+# PDLL <- readRDS(gzcon(url("https://github.com/rtelmore/rmd_examples/raw/master/data/311-PDLL.rds")))
+# PDInc <- readRDS(gzcon(url("https://github.com/rtelmore/rmd_examples/raw/master/data/311-PDInc.rds")))
+df <- readRDS(file = "../data/311-df.rds")
+PDLL <- readRDS(file = "../data/311-PDLL.rds")
+PDInc <- readRDS(file = "../data/311-PDInc.rds")
 ```
 
 
