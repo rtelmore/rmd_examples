@@ -1,0 +1,132 @@
+---
+title: "R Markdown Embedded Shiny Controls Example"
+author: "Ryan Elmore & Kellie Keeling"
+date: "June 20, 2016"
+output:
+  html_document:
+    toc: true
+    toc_depth: 3
+    theme: default
+    highlight: tango
+runtime: shiny
+---
+```{r packages, include=FALSE}
+library(knitr)
+```
+
+```{r knit-opts, include=FALSE}
+opts_chunk$set(echo=FALSE,
+               warning = FALSE,
+               message = FALSE,
+               comment = NA)
+```
+
+```{r load-data}
+# Load in the data file
+df <- readRDS(gzcon(url("https://github.com/rtelmore/rmd_examples/raw/master/data/311-df.rds")))
+
+```
+
+This R Markdown document is made interactive using Shiny. Unlike the more traditional workflow of creating static reports, you can now create documents that allow your readers to change the assumptions underlying your analysis and see the results immediately. 
+
+To learn more, see [Interactive Documents](http://rmarkdown.rstudio.com/authoring_shiny.html).
+
+## Examining 'Days to Close' incident across 2 Agencies
+We can see that the data is very skewed because most of the incidents close in a week or less.  But the max is over 300 days.  
+```{r boxplot}
+# Initial Boxplot showing skewed data
+dfBox <- df[df$Agency==c('Finance','311'),
+            c('DaysToClose','Agency')]
+boxplot(as.numeric(dfBox$DaysToClose)~dfBox$Agency,
+        las=2)
+```
+
+### Using a Slider Control
+We can allow the user to control how they view the data. We can embed a Shiny input control <b>sliderInput</b> to break the data into 'high' and 'low' values so that the box plots are more meaningful. And the user can choose if the cut off should be 7 days, 14 days, or any number of days in the specified range.
+
+```{r cutoff-boxplot}
+# Example Code with 1 slider
+sliderInput("cutoff", 
+            "Enter Cutoff Days between Low and High:", 
+            min = 1, 
+            max = 100, 
+            value = 14
+    )
+
+renderPlot({
+    dfBox <- df[df$Agency==c('Finance','311'),
+                c('DaysToClose','Agency')]
+    dfBoxLow <- dfBox[dfBox$DaysToClose<=input$cutoff,]
+    dfBoxHigh <- dfBox[dfBox$DaysToClose > input$cutoff,]
+    par(mar=c(8,3,3,2)) #bottom, left, top and right margins
+    par(mfrow=c(1,2)) #1 row x 2 columns plot output
+    boxplot(as.numeric(dfBoxLow$DaysToClose)~dfBoxLow$Agency,
+            las=2,
+            main=paste("Low: <=",input$cutoff))
+    boxplot(as.numeric(dfBoxHigh$DaysToClose)~dfBoxHigh$Agency,
+            las=2,
+            main=paste("High: >",input$cutoff))
+    par(mfrow=c(1,1))
+    par(mar=c(5.1, 4.1, 4.1, 2.1))  #reset plot margins
+})
+```
+
+### Using Selection Control and Slider
+We can also give the user control over which Agencies they want to compare by adding a <b>selectInput</b>.
+  
+```{r cutoff-agency-boxplot}
+# Example Code with 2 selection controls and 1 slider
+inputPanel(
+    selectInput("agency1", 
+              label = "Choose Agency 1:",
+              choices = unique(df$Agency), 
+              selected = "311"
+              ),
+    selectInput("agency2",
+              label = "Choose Agency 2:",
+              choices = unique(df$Agency), 
+              selected = "Finance"
+              ),
+    sliderInput("cutoff2", "Enter Low and High Cutoff:", 
+                min = 1, 
+                max = 100, 
+                value = 14
+                )
+    )
+
+renderPlot({
+    dfBox <- df[df$Agency==c(input$agency1,input$agency2),
+                c('DaysToClose','Agency')]
+    dfBoxLow <- dfBox[dfBox$DaysToClose<=input$cutoff2,]
+    dfBoxHigh <- dfBox[dfBox$DaysToClose > input$cutoff2,]
+    
+    par(mar=c(8,3,3,2)) #bottom, left, top and right margins
+    par(mfrow=c(1,2)) #1 row x 2 columns plot output
+    boxplot(as.numeric(dfBoxLow$DaysToClose)~dfBoxLow$Agency,
+            las=2,
+            main=paste("Low: <=",input$cutoff2))
+    boxplot(as.numeric(dfBoxHigh$DaysToClose)~dfBoxHigh$Agency,
+            las=2,
+            main=paste("High: >",input$cutoff2))
+    par(mfrow=c(1,1))
+    par(mar=c(5.1, 4.1, 4.1, 2.1))  #reset plot margins
+})
+```
+
+## Exercises
+
+1. Try changing the scatterplot below to use different months by adding either a <b>selectInput</b> or <b>sliderInput</b> before the plot and adding the function <b>renderPlot</b> around the plot code. You will change the 6 in the dfScatter <- line to be your input$ variable from your selectInput or sliderInput.
+2. Once you get it to work, try making the output more complete by formatting the x and y axis label and adding a title that displays the month.
+
+```{r scatterplot}
+# Initial Scatterplot for Exercise
+dfScatter <- df[df$Month==6,c('DaysToClose','Hour')]
+plot(x=dfScatter$Hour,
+     y=dfScatter$DaysToClose)
+abline(lm(dfScatter$DaysToClose~dfScatter$Hour), col="red")
+
+```
+
+## Appendix: The Code
+```{r appendix, echo=TRUE, eval=FALSE, ref.label=all_labels()}
+```

@@ -1,0 +1,127 @@
+---
+title: "2015 311 Data"
+author: "Ryan Elmore & Kellie Keeling"
+date: "June 20, 2016"
+output:
+  html_document:
+    toc: true
+    toc_depth: 3
+    theme: default
+    highlight: tango
+---
+```{r packages, include=FALSE}
+library(knitr)
+```
+
+```{r setup, echo=FALSE}
+opts_chunk$set(cache=TRUE,
+               echo=FALSE,
+               warning = FALSE,
+               message = FALSE,
+               comment = NA)
+```
+
+```{r load-data}
+df <- readRDS(gzcon(url("https://github.com/rtelmore/rmd_examples/raw/master/data/311-df.rds")))
+
+```
+
+##Exploration of the 2015 Denver 311 Dataset
+This report explores a 10% sample of the 2015 311 data by using visualizations.
+
+### Line Charts
+The first chart we have shows a line chart showing the number of incidents by month.  We have defined several options such as changing the default axis showing months 1 - 12 to letters, changing the y axis label, and adding a title. The second chart shows the Number of incidents by hour of day where 2 vertical lines have been added with text that show the 
+
+```{r line-charts}
+
+#RESOURCE: http://www.statmethods.net/index.html
+#Line Charts
+par(mar=c(5.1, 4.1, 4.1, 2.1)) #default #bottom, left, top and right margins
+plot(table(df$Month),
+     main="The Number of Incidents for 2015",
+     ylab = "Number of Incidents",
+     type="l",
+     xaxt="n")
+axis(side=1, 
+     at=c(1,2,3,4,5,6,7,8,9,10,11,12),
+     labels=c("J","F","M","A","M","J","J","A","S","O","N","D"))
+
+plot(table(df$Hour),
+     main="Hour of Day",
+     ylab = "Number of Incidents",
+     type="l")
+abline(v=8)
+abline(v=17)
+text(x=8, 
+     y=4700, 
+     labels="8:00am", 
+     cex = .8)
+text(x=18, 
+     y=4700, 
+     labels="5:00pm", 
+     cex = .8)
+```
+
+### Column Chart
+The next charts shows an example of a column chart.  Here we can see that most of the calls were not resolved on the first call and the title displays the total number of Y and N values from the data so it will update with a new data set.
+
+```{r column-chart}
+#Column Chart
+barplot(sort(table(df$First.Call.Resolution)),
+        main=paste("First Call Resolution Y:", 
+                   table(df$First.Call.Resolution)[2],
+                   "N:",
+                   table(df$First.Call.Resolution)[3]))
+```
+
+
+```{r}
+
+```
+
+### Bar Plot
+Next we see the example of 2 bar plots.  Bar plots are preferred over column charts when you have long names for the bars.
+
+```{r bar-plot}
+
+#Bar Plots
+par(mar=c(5.1,12.1,4.1, 2.1)) #make left margin larger
+barplot(sort(table(df$Case.Status)),
+        horiz = TRUE,
+        cex.names=.75, 
+        las=1,
+        main="Case Status" ) #las=1 horiz labels
+par(mar=c(5.1, 4.1, 4.1, 2.1)) #default #bottom, left, top and right margins
+
+#This plot doesn't need the extra left margin
+barplot(sort(table(df$Council.District)),
+        horiz = TRUE, 
+        cex.names=.75, 
+        las=1,
+        main="Council District")
+
+```
+
+### Histogram
+ 
+The final example in this file shows a Histogram. It is fairly plan with just the default output.
+```{r histogram}
+#Histogram
+x <- as.numeric(df$DaysToClose[df$DaysToClose<60])
+hist(x)
+```
+
+## Exercises:  
+
+1. Try changing the Hour of Day line chart to show vertical lines and 7:00 am and 6:00pm.  
+2. Create bar plots for Agency, Type, or Police District. 
+3. Try making the histogram graph more complete. 
+4. Some options to try:  
+* xlab (xlabels) 
+* main (title) 
+* sub (bottom title) - try putting mean in subtitle using code: paste("mean:",mean(x,na.rm=TRUE))
+
+
+## Appendix: The Code
+```{r appendix, echo=TRUE, eval=FALSE, ref.label=all_labels()}
+```
