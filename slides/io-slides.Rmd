@@ -13,6 +13,16 @@ output:
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
+## Outline
+
+1. RMarkdown syntax
+2. A Hello World Example
+3. Data Processing 311 Data
+4. Break
+5. 311 Exploration
+6. Flexdashboards
+7. Embedded Shiny
+
 ## What is R Markdown?
 
 From the R Markdown Cheatsheet: "An R Markdown (.Rmd) file is a record of your research."
